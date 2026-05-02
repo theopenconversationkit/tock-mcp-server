@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tock-mcp-server.fullname" . }}-config
+  labels:
+    {{- include "tock-mcp-server.labels" . | nindent 4 }}
+data:
+  config.yaml: |
+    tock:
+      base_url: {{ .Values.config.tock.base_url | quote }}
+      namespace: {{ .Values.config.tock.namespace | quote }}
+      bot: {{ .Values.config.tock.bot | quote }}
+      connector: {{ .Values.config.tock.connector | quote }}
+      user_id: {{ .Values.config.tock.user_id | quote }}
+    server:
+      addr: {{ .Values.config.server.addr | quote }}
+

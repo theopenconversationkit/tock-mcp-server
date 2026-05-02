@@ -1,0 +1,22 @@
+tock:
+  # Base URL of the Tock instance (no trailing slash)
+  base_url: "https://demo.tock.ai"
+  # Tock namespace
+  namespace: "sacquatella"
+  # Bot name
+  bot: "howtonet"
+  # Web-connector identifier
+  connector: "howtonetweb"
+  # User ID sent to Tock with every request
+  user_id: "mcp-user-001"
+  # Optional extra HTTP headers forwarded to the Tock web-connector.
+  # The value is the default used when the MCP caller does not provide one.
+  # Leave empty ("") to make the header optional with no default.
+  extra_headers:
+    X-Toki-Origin: "github-copilot"   # always sent; can be overridden by the caller
+    X-Toki-Filter: ""                 # no default — provided by the caller if needed
+
+server:
+  # HTTP listen address of the MCP server
+  addr: ":8083"
+

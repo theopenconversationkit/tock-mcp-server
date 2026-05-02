@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tock-mcp-config
+data:
+  config.yaml: |
+    tock:
+      base_url: "https://demo.tock.ai"
+      namespace: "sacquatella"
+      bot: "howtonet"
+      connector: "howtonetweb"
+      user_id: "mcp-user-001"
+    server:
+      addr: ":8083"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tock-mcp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tock-mcp-server
+  template:
+    metadata:
+      labels:
+        app: tock-mcp-server
+    spec:
+      containers:
+        - name: tock-mcp-server
+          image: ghcr.io/sacquatella/tock-mcp-server:v1.0.0
+          args: ["-config", "/config/config.yaml", "-addr", ":8083"]
+          ports:
+            - containerPort: 8083
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: tock-mcp-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tock-mcp-server
+spec:
+  selector:
+    app: tock-mcp-server
+  ports:
+    - name: http
+      port: 8083
+      targetPort: 8083
+

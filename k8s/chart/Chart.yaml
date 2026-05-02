@@ -1,0 +1,17 @@
+apiVersion: v2
+name: tock-mcp-server
+description: Helm chart for the Tock MCP Server (web-connector bridge)
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - tock
+  - mcp
+  - chatbot
+  - ai
+maintainers:
+  - name: sacquatella
+    url: https://github.com/sacquatella
+sources:
+  - https://github.com/sacquatella/tock-mcp-server
+

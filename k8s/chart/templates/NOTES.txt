@@ -1,0 +1,17 @@
+1. Tock MCP Server is deployed.
+
+Access it inside the cluster:
+
+  kubectl port-forward svc/{{ include "tock-mcp-server.fullname" . }} 8083:{{ .Values.service.port }}
+
+Then call the MCP endpoint:
+
+  curl http://localhost:8083/mcp
+
+The configuration is stored in ConfigMap {{ include "tock-mcp-server.fullname" . }}-config.
+To update the Tock endpoint without rebuilding the image, edit values.yaml and run:
+
+  helm upgrade {{ .Release.Name }} ./k8s/chart \
+    --set config.tock.base_url=https://your-tock-instance \
+    --set image.tag=<new-tag>
+

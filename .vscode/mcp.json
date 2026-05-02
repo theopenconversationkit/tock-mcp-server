@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "tock-mcp-server": {
+      "type": "http",
+      "url": "http://localhost:8083/mcp"
+    }
+  }
+}
+
