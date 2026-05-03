@@ -33,6 +33,18 @@ spec:
           args: ["-config", "/config/config.yaml", "-addr", ":8083"]
           ports:
             - containerPort: 8083
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8083
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8083
+            initialDelaySeconds: 3
+            periodSeconds: 10
           volumeMounts:
             - name: config
               mountPath: /config

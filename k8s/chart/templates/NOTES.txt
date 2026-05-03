@@ -1,5 +1,19 @@
 1. Tock MCP Server is deployed.
 
+{{- if .Values.ingress.enabled }}
+  {{- range .Values.ingress.hosts }}
+    {{- $host := .host }}
+    {{- range .paths }}
+      {{- if $.Values.ingress.tls }}
+MCP endpoint : https://{{ $host }}{{ .path }}
+Health check : https://{{ $host }}/health
+      {{- else }}
+MCP endpoint : http://{{ $host }}{{ .path }}
+Health check : http://{{ $host }}/health
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- else }}
 Access it inside the cluster:
 
   kubectl port-forward svc/{{ include "tock-mcp-server.fullname" . }} 8083:{{ .Values.service.port }}
@@ -8,10 +22,14 @@ Then call the MCP endpoint:
 
   curl http://localhost:8083/mcp
 
+Health check:
+
+  curl http://localhost:8083/health
+{{- end }}
+
 The configuration is stored in ConfigMap {{ include "tock-mcp-server.fullname" . }}-config.
 To update the Tock endpoint without rebuilding the image, edit values.yaml and run:
 
   helm upgrade {{ .Release.Name }} ./k8s/chart \
     --set config.tock.base_url=https://your-tock-instance \
     --set image.tag=<new-tag>
-

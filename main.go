@@ -335,6 +335,11 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/mcp", logged)
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"status":"ok"}`))
+	})
 
 	log.Printf("tock-web MCP server listening on http://localhost%s/mcp", cfg.Server.Addr)
 	log.Printf("→ Tock endpoint: %s/io/%s/%s/%s",
