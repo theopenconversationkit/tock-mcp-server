@@ -13,6 +13,16 @@ make build-servers
 make run-tock-mcp
 ```
 
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/mcp` | JSON-RPC (stateless, used by most MCP clients) |
+| `GET`  | `/mcp` | SSE stream (server-sent events, used by streaming-capable clients) |
+| `GET`  | `/health` | Health check — returns `{"status":"ok"}` |
+
+Both transports support all standard MCP methods including `ping`, `initialize`, and `tools/call`.
+
 ## Configuration
 
 The server expects a YAML configuration file with the following structure:
@@ -39,11 +49,20 @@ tock:
 server:
   # HTTP listen address of the MCP server
   addr: ":8083"
+  # Name of the MCP tool exposed to AI clients.
+  # Defaults to "ask_tock" if empty or omitted.
+  tool_name: "ask_tock"
+  # Description of the MCP tool shown to AI clients.
+  # This text helps the AI decide when and how to call the tool.
+  # Defaults to a built-in description if empty or omitted.
+  tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
 ```
+
+> **Tip:** Customise `tool_name` and `tool_description` to match the domain of your Tock bot so that AI assistants can better decide when to invoke the tool.
 
 ## Docker image (scratch)
 
-The image is built with a `scratch` runtime and expects a configuration file available at `/etc/tock/config.yaml`.
+The image is built with a `scratch` runtime and expects a configuration file available at `/config/config.yaml`.
 
 `config.yaml`
 ```yaml
@@ -62,6 +81,9 @@ tock:
 server:
   # HTTP listen address of the MCP server
   addr: ":8083"
+  # Name and description of the MCP tool (optional — defaults shown below)
+  tool_name: "ask_tock"
+  tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
 ```
 
 ```bash
@@ -69,7 +91,6 @@ docker run --rm -p 8083:8083 \
   -v "$(pwd)/config.yaml:/config/config.yaml:ro" \
   ghcr.io/sacquatella/tock-mcp-server:v0.5.0
 ```
-
 
 Build locally:
 
@@ -86,7 +107,6 @@ docker run --rm -p 8083:8083 \
 ```
 
 ## Deploying on Kubernetes (ConfigMap)
-
 
 ### with manifest
 The container does not embed `config.yaml`, so each environment can mount its own ConfigMap.
@@ -114,6 +134,8 @@ data:
       user_id: "mcp-user-001"
     server:
       addr: ":8083"
+      tool_name: "ask_tock"
+      tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -145,7 +167,16 @@ spec:
 
 ### With Helm chart
 
-A Helm chart is available in `k8s/chart/` for easier deployment and configuration management.
+The Helm chart is published to the GHCR OCI registry on every version tag and is also available locally in `k8s/chart/`.
+
+**Install from the OCI registry (recommended):**
+
+```bash
+helm install tock-mcp oci://ghcr.io/sacquatella/charts/tock-mcp-server \
+  --version <version> -f values.yaml
+```
+
+**Install from local source:**
 
 ```bash
 helm install tock-mcp ./k8s/chart -f values.yaml
@@ -159,6 +190,9 @@ config:
     bot: "my-bot"
     connector: "web"
     user_id: "mcp-prod"
+  server:
+    tool_name: "ask_tock"
+    tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
 
 ingress:
   enabled: true

@@ -19,4 +19,10 @@ tock:
 server:
   # HTTP listen address of the MCP server
   addr: ":8083"
+  # Name of the MCP tool exposed to AI clients. Defaults to "ask_tock" if empty.
+  tool_name: "ask_tock"
+  # Description of the MCP tool exposed to AI clients.
+  # This text helps the AI decide when and how to call the tool.
+  # Leave empty to use the built-in default.
+  tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
 

@@ -30,7 +30,9 @@ type TockConfig struct {
 
 // ServerConfig holds the HTTP server parameters.
 type ServerConfig struct {
-	Addr string `yaml:"addr"` // Listen address, e.g. ":8083".
+	Addr            string `yaml:"addr"`             // Listen address, e.g. ":8083".
+	ToolName        string `yaml:"tool_name"`        // Name of the MCP tool exposed to AI clients. Defaults to "ask_tock" if empty.
+	ToolDescription string `yaml:"tool_description"` // Description of the MCP tool shown to AI clients. Falls back to a built-in default if empty.
 }
 
 // Config is the top-level configuration structure loaded from the YAML file.
@@ -278,13 +280,23 @@ func main() {
 		nil,
 	)
 
+	// Use the name and description from the config file, or fall back to sensible defaults.
+	toolName := cfg.Server.ToolName
+	if strings.TrimSpace(toolName) == "" {
+		toolName = "ask_tock"
+	}
+	toolDescription := cfg.Server.ToolDescription
+	if strings.TrimSpace(toolDescription) == "" {
+		toolDescription = "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
+	}
+
 	// Register the ask_tock tool: takes a question string and returns the
 	// Tock RAG answer formatted as Markdown text.
 	mcp.AddTool(
 		server,
 		&mcp.Tool{
-			Name:        "ask_tock",
-			Description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents.",
+			Name:        toolName,
+			Description: toolDescription,
 		},
 		func(ctx context.Context, req *mcp.CallToolRequest, args AskTockArgs) (*mcp.CallToolResult, any, error) {
 			if strings.TrimSpace(args.Question) == "" {
