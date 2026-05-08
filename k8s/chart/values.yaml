@@ -87,5 +87,7 @@ config:
     user_id: "mcp-user-001"
   server:
     addr: ":8083"
+    tool_name: "ask_tock"
+    tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
 
 

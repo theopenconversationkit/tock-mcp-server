@@ -14,4 +14,5 @@ data:
       user_id: {{ .Values.config.tock.user_id | quote }}
     server:
       addr: {{ .Values.config.server.addr | quote }}
-
+      tool_name: {{ .Values.config.server.tool_name | quote }}
+      tool_description: {{ .Values.server.tool_description | quote }}

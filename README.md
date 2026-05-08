@@ -153,7 +153,7 @@ spec:
     spec:
       containers:
         - name: tock-mcp-server
-          image: ghcr.io/sacquatella/tock-mcp-server:v0.5.0
+          image: ghcr.io/sacquatella/tock-mcp-server:v0.6.0
           args: ["-config", "/config/config.yaml", "-addr", ":8083"]
           volumeMounts:
             - name: config
