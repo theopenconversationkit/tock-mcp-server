@@ -3,8 +3,8 @@
 Helm chart for the **Tock MCP Server** — a [Model Context Protocol](https://modelcontextprotocol.io) server bridging AI agents with the [Tock](https://doc.tock.ai) web-connector.
 
 | Chart version | App version | Image |
-|---|---|---|
-| 0.1.0 | 1.0.0 | `ghcr.io/theopenconversationkit/tock-mcp-server` |
+|---------------|------------|---|
+| 0.1.1         | 0.6.0      | `ghcr.io/theopenconversationkit/tock-mcp-server` |
 
 ---
 
@@ -22,14 +22,14 @@ Helm chart for the **Tock MCP Server** — a [Model Context Protocol](https://mo
 ```bash
 # From local checkout
 helm install tock-mcp ./k8s/chart \
-  --set image.tag=v1.0.0 \
+  --set image.tag=v0.6.0 \
   --set config.tock.base_url=https://your-tock-instance
 ```
 
 ```bash
 # Dry-run / preview
 helm install tock-mcp ./k8s/chart --dry-run --debug \
-  --set image.tag=v1.0.0
+  --set image.tag=v0.6.0
 ```
 
 ---
@@ -110,7 +110,7 @@ ingress:
 
 ```bash
 helm install tock-mcp ./k8s/chart \
-  --set image.tag=v1.0.0 \
+  --set image.tag=v0.6.0 \
   --set config.tock.base_url=https://tock.my-company.com \
   --set config.tock.namespace=myns \
   --set config.tock.bot=mybot \
@@ -121,7 +121,7 @@ helm install tock-mcp ./k8s/chart \
 
 ```bash
 helm install tock-mcp ./k8s/chart \
-  --set image.tag=v1.0.0 \
+  --set image.tag=v0.6.0 \
   --set ingress.enabled=true \
   --set ingress.className=nginx \
   --set "ingress.annotations.cert-manager\.io/cluster-issuer=letsencrypt-prod" \
@@ -142,7 +142,7 @@ helm install tock-mcp ./k8s/chart -f values-prod.yaml
 
 ```yaml
 image:
-  tag: v1.2.0
+  tag: v0.6.0
 
 config:
   tock:
@@ -176,7 +176,7 @@ ingress:
 
 ```bash
 helm upgrade tock-mcp ./k8s/chart \
-  --set image.tag=v1.1.0
+  --set image.tag=v0.6.0
 ```
 
 > **Note:** When `config.*` values change, the Deployment automatically rolls out thanks to the `checksum/config` annotation.
