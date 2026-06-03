@@ -1,4 +1,4 @@
-module github.com/sacquatella/tock-mcp-server
+module github.com/theopenconversationkit/tock-mcp-server
 
 go 1.26.2
 

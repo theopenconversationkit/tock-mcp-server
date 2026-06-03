@@ -89,7 +89,7 @@ server:
 ```bash
 docker run --rm -p 8083:8083 \
   -v "$(pwd)/config.yaml:/config/config.yaml:ro" \
-  ghcr.io/sacquatella/tock-mcp-server:v0.5.0
+  ghcr.io/theopenconversationkit/tock-mcp-server:v0.5.0
 ```
 
 Build locally:
@@ -128,7 +128,7 @@ data:
   config.yaml: |
     tock:
       base_url: "https://demo.tock.ai"
-      namespace: "sacquatella"
+      namespace: "app"
       bot: "howtonet"
       connector: "howtonetweb"
       user_id: "mcp-user-001"
@@ -153,7 +153,7 @@ spec:
     spec:
       containers:
         - name: tock-mcp-server
-          image: ghcr.io/sacquatella/tock-mcp-server:v0.6.0
+          image: ghcr.io/theopenconversationkit/tock-mcp-server:v0.6.0
           args: ["-config", "/config/config.yaml", "-addr", ":8083"]
           volumeMounts:
             - name: config
@@ -172,7 +172,7 @@ The Helm chart is published to the GHCR OCI registry on every version tag and is
 **Install from the OCI registry (recommended):**
 
 ```bash
-helm install tock-mcp oci://ghcr.io/sacquatella/charts/tock-mcp-server \
+helm install tock-mcp oci://ghcr.io/theopenconversationkit/charts/tock-mcp-server \
   --version <version> -f values.yaml
 ```
 

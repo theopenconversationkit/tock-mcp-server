@@ -13,5 +13,5 @@ maintainers:
   - name: sacquatella
     url: https://github.com/sacquatella
 sources:
-  - https://github.com/sacquatella/tock-mcp-server
+  - https://github.com/theopenconversationkit/tock-mcp-server
 

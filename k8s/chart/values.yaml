@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/sacquatella/tock-mcp-server
+  repository: ghcr.io/theopenconversationkit/tock-mcp-server
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -81,7 +81,7 @@ affinity: {}
 config:
   tock:
     base_url: "https://demo.tock.ai"
-    namespace: "sacquatella"
+    namespace: "app"
     bot: "howtonet"
     connector: "howtonetweb"
     user_id: "mcp-user-001"
