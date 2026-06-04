@@ -14,6 +14,7 @@ build: build-servers
 
 build-servers: ## Build mcp servers
 	mkdir -p $(BIN_DIR)
+	go mod tidy
 	go build -o ./$(TOCK_MCP_SERVER) .
 
 run: build-servers ## Run tock-mcp-server

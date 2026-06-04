@@ -25,4 +25,8 @@ server:
   # This text helps the AI decide when and how to call the tool.
   # Leave empty to use the built-in default.
   tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
+  # Description of the "question" input parameter shown to AI clients.
+  # This guides the AI on what to include in the question.
+  # Leave empty to use the built-in default.
+  input_question_description: "Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available."
 
