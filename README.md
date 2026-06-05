@@ -56,6 +56,9 @@ server:
   # This text helps the AI decide when and how to call the tool.
   # Defaults to a built-in description if empty or omitted.
   tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
+  # Description of the "question" parameter expected by the tool.
+  # This text guides the AI on what information to include in the question for better answers.
+  input_question_description: "Question about Tock. Include context, error messages, version, environment or goal if available."
 ```
 
 > **Tip:** Customise `tool_name` and `tool_description` to match the domain of your Tock bot so that AI assistants can better decide when to invoke the tool.
@@ -84,6 +87,7 @@ server:
   # Name and description of the MCP tool (optional — defaults shown below)
   tool_name: "ask_tock"
   tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
+  input_question_description: "Question about Tock. Include context, error messages, version, environment or goal if available."
 ```
 
 ```bash
@@ -136,6 +140,7 @@ data:
       addr: ":8083"
       tool_name: "ask_tock"
       tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
+      input_question_description: "Question about Tock. Include context, error messages, version, environment or goal if available."
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -193,6 +198,7 @@ config:
   server:
     tool_name: "ask_tock"
     tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
+    input_question_description: "Question about Tock. Include context, error messages, version, environment or goal if available."
 
 ingress:
   enabled: true
