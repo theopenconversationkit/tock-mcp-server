@@ -57,6 +57,11 @@ func RegisterTool(server *mcp.Server, tockClient *tock.Client, serverCfg config.
 			Name:        toolName,
 			Description: toolDescription,
 			InputSchema: inputSchema,
+			Annotations: &mcp.ToolAnnotations{
+				ReadOnlyHint:    true,
+				DestructiveHint: new(false),
+				IdempotentHint:  true,
+			},
 		},
 		func(ctx context.Context, req *mcp.CallToolRequest, args AskTockArgs) (*mcp.CallToolResult, any, error) {
 			if strings.TrimSpace(args.Question) == "" {

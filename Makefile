@@ -1,4 +1,4 @@
-.PHONY: help all build build-servers run run-local docker run-docker clean
+.PHONY: help all build build-servers run run-local docker run-docker tests clean
 
 BIN_DIR=bin
 
@@ -33,6 +33,9 @@ run-docker: docker ## Run tock-mcp-server in Docker
 
 run-mcp-instpector: ## Run mcp-inspector
 	npx @modelcontextprotocol/inspector
+
+tests: ## Run tests
+	go test -v ./...
 
 clean: ## Clean build artifacts
 	go clean

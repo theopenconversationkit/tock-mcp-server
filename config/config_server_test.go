@@ -6,7 +6,7 @@ import (
 )
 
 func TestServerConfig_ToolDescriptionFields(t *testing.T) {
-	cfg, err := Load("../config.tock-rag.yaml")
+	cfg, err := Load("../tests/config.tock-rag.yaml")
 	if err != nil {
 		t.Fatalf("Load() error: %v", err)
 	}
