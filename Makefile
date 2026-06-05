@@ -1,8 +1,19 @@
-.PHONY: help all build build-servers run run-local docker run-docker tests clean
+.PHONY: help all build build-servers run run-local docker run-docker tests clean lintchart
 
 BIN_DIR=bin
 
 TOCK_MCP_SERVER=$(BIN_DIR)/mcp-server-tock-web
+
+# Variables
+CHART=k8s/chart
+chartversion?=`awk '/^version/ {print $$NF}' ${CHART}/Chart.yaml`
+appversion?=`awk '/^appVersion/ {print $$NF}' ${CHART}/Chart.yaml`
+
+# Colors for output
+BLUE = \033[0;34m
+GREEN = \033[0;32m
+RED = \033[0;31m
+NC = \033[0m # No Color
 
 help: ## Display this help message
 	@echo "Available commands:"
@@ -40,3 +51,11 @@ tests: ## Run tests
 clean: ## Clean build artifacts
 	go clean
 	rm -rf $(BIN_DIR)
+
+lint-chart: ## Lint the chart
+	@echo "$(GREEN)Lint Helm Chart ...$(NC)"
+	helm lint ${CHART}
+	@echo "$(GREEN)✓ Lint completed$(NC)"
+
+chart-version: ## Display chart version
+	@echo "$(BLUE)Chart Application Version:$(appversion)  Chart Version:${chartversion}$(NC)"
