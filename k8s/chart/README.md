@@ -4,7 +4,7 @@ Helm chart for the **Tock MCP Server** — a [Model Context Protocol](https://mo
 
 | Chart version | App version | Image |
 |---------------|-------------|---|
-| 0.1.2         | 0.7.0       | `ghcr.io/theopenconversationkit/tock-mcp-server` |
+| 0.1.2         | 0.7.1       | `ghcr.io/theopenconversationkit/tock-mcp-server` |
 
 ---
 
@@ -22,14 +22,14 @@ Helm chart for the **Tock MCP Server** — a [Model Context Protocol](https://mo
 ```bash
 # From local checkout
 helm install tock-mcp ./k8s/chart \
-  --set image.tag=v0.7.0 \
+  --set image.tag=v0.7.1 \
   --set config.tock.base_url=https://your-tock-instance
 ```
 
 ```bash
 # Dry-run / preview
 helm install tock-mcp ./k8s/chart --dry-run --debug \
-  --set image.tag=v0.7.0
+  --set image.tag=v0.7.1
 ```
 
 ---
@@ -52,16 +52,17 @@ All parameters are set in [`values.yaml`](values.yaml) and can be overridden wit
 
 Injected as a `ConfigMap` mounted at `/config/config.yaml` inside the container.
 
-| Parameter                 | Description                         | Default                                                                                                          |
-|---------------------------|-------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| `config.tock.base_url`    | Base URL of the Tock API            | `https://demo.tock.ai`                                                                                           |
-| `config.tock.namespace`   | Tock namespace                      | `app`                                                                                                            |
-| `config.tock.bot`         | Bot name                            | `howtonet`                                                                                                       |
-| `config.tock.connector`   | Web-connector identifier            | `howtonetweb`                                                                                                    |
-| `config.tock.user_id`     | User ID sent to Tock                | `mcp-user-001`                                                                                                   |
-| `config.server.addr`      | HTTP listen address                 | `:8083`                                                                                                          |
-| `config.server.tool_name` | MCP tool name for defined connector | `ask_tock`                                                                                                       |
-| `config.server.tool_description` | MCP tool description for defined connector  | `Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents.` |
+| Parameter                 | Description                                                       | Default                                                                                                          |
+|---------------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| `config.tock.base_url`    | Base URL of the Tock API                                          | `https://demo.tock.ai`                                                                                           |
+| `config.tock.namespace`   | Tock namespace                                                    | `app`                                                                                                            |
+| `config.tock.bot`         | Bot name                                                          | `howtonet`                                                                                                       |
+| `config.tock.connector`   | Web-connector identifier                                          | `howtonetweb`                                                                                                    |
+| `config.tock.user_id`     | User ID sent to Tock                                              | `mcp-user-001`                                                                                                   |
+| `config.server.addr`      | HTTP listen address                                               | `:8083`                                                                                                          |
+| `config.server.tool_name` | MCP tool name for defined connector                               | `ask_tock`                                                                                                       |
+| `config.server.tool_description` | Highly detailed description guiding Agent when to use the tool... | `Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents.` |
+| `input_question_description` | Detailed guidance on what to include in the question...           | `Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available` |
 
 ### Service
 
