@@ -16,3 +16,4 @@ data:
       addr: {{ .Values.config.server.addr | quote }}
       tool_name: {{ .Values.config.server.tool_name | quote }}
       tool_description: {{ .Values.server.tool_description | quote }}
+      input_question_description: {{ .Values.server.input_question_description | quote }}

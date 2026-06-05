@@ -1,0 +1,19 @@
+tock:
+  base_url: "https://demo.tock.ai"
+  namespace: "app"
+  bot: "howtonet"
+  connector: "howtonetweb"
+  user_id: "mcp-user-001"
+  extra_headers:
+    X-Toki-Origin: ""
+    X-Toki-Filter: ""
+
+server:
+  addr: ":8083"
+  # Nom du tool MCP exposé aux clients IA
+  tool_name: "ask_tock_rag"
+  # Description du tool - guide l'IA sur récannand utiliser ce tool
+  tool_description: "Utilise ce tool dès qu'une question concerne Tock - The Open Conversation Kit ou sa documentation technique. Ce tool permet de rechercher dans un RAG construit à partir de la documentation officielle Tock et de produire une réponse technique fiable. Il doit être utilisé pour les questions portant sur l'installation, la configuration, l'architecture, les connecteurs, les APIs, le développement de bots, les stories, le NLP, les intents, les entities, le déploiement, la supervision, l'administration ou les erreurs rencontrées avec Tock. Ne pas répondre uniquement avec les connaissances générales du modèle lorsque la question concerne Tock : appeler ce tool en priorité."
+  # Description du paramètre "question" - indique à l'IA ce qu'inclure dans la question
+  input_question_description: "Question technique complète à poser au RAG Tock. Inclure le contexte utilisateur, les messages d'erreur, la version, l'environnement ou l'objectif recherché si ces informations sont disponibles."
+

@@ -3,8 +3,8 @@
 Helm chart for the **Tock MCP Server** — a [Model Context Protocol](https://modelcontextprotocol.io) server bridging AI agents with the [Tock](https://doc.tock.ai) web-connector.
 
 | Chart version | App version | Image |
-|---------------|------------|---|
-| 0.1.1         | 0.6.0      | `ghcr.io/theopenconversationkit/tock-mcp-server` |
+|---------------|-------------|---|
+| 0.1.2         | 0.7.0       | `ghcr.io/theopenconversationkit/tock-mcp-server` |
 
 ---
 
@@ -22,14 +22,14 @@ Helm chart for the **Tock MCP Server** — a [Model Context Protocol](https://mo
 ```bash
 # From local checkout
 helm install tock-mcp ./k8s/chart \
-  --set image.tag=v0.6.0 \
+  --set image.tag=v0.7.0 \
   --set config.tock.base_url=https://your-tock-instance
 ```
 
 ```bash
 # Dry-run / preview
 helm install tock-mcp ./k8s/chart --dry-run --debug \
-  --set image.tag=v0.6.0
+  --set image.tag=v0.7.0
 ```
 
 ---

@@ -1,0 +1,16 @@
+tock:
+  base_url: "https://tock.example.com"
+  namespace: "production"
+  bot: "productionbot"
+  connector: "web_connector"
+  user_id: "mcp-production-user"
+  extra_headers:
+    X-Toki-Filter: "category:faq"
+    X-Toki-Origin: "mcp-server"
+
+server:
+  addr: ":8080"
+  tool_name: "ask_tock"
+  tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
+  input_question_description: "Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available."
+

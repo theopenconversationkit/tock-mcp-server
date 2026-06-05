@@ -1,0 +1,16 @@
+tock:
+  base_url: "https://staging-tock.example.com"
+  namespace: "staging"
+  bot: "stagingbot"
+  connector: "web_connector"
+  user_id: "mcp-staging-user"
+  extra_headers:
+    X-Toki-Filter: "category:faq"
+    X-Toki-Origin: "mcp-server-staging"
+
+server:
+  addr: ":8080"
+  tool_name: "ask_tock_staging"
+  tool_description: "Staging: Ask a question to the Tock documentary chatbot."
+  input_question_description: "Question for staging Tock chatbot. Include context and details."
+
