@@ -1,6 +1,23 @@
 # tock-mcp-server
 MCP server for T.O.C.K. web-connector
 
+```mermaid
+flowchart LR
+        
+    subgraph T.O.C.K.
+        web_connector_One[Web Connector for bot One]
+        web_connector_Two[Web Connector for bot Two]
+    end
+    MCP_Server_One[T.O.C.K. MCP Server]
+    MCP_Server_Two[T.O.C.K. MCP Server]
+    AI_Client_One[Agent / Copilot / AI Client]
+
+    AI_Client_One --> MCP_Server_One
+    AI_Client_One --> MCP_Server_Two
+    MCP_Server_One --> web_connector_One
+    MCP_Server_Two --> web_connector_Two
+```
+
 ## Building the server
 
 ```bash
