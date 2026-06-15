@@ -15,7 +15,7 @@ name: helm-chart
 on:
   push:
     tags:
-      - "v*"
+      - "chart-v*"
 
 permissions:
   contents: read

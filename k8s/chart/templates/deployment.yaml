@@ -1,3 +1,4 @@
+{{- $trustStoreEnabled := and .Values.trustStore.enabled .Values.trustStore.secretName -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,6 +41,11 @@ spec:
             - "/config/config.yaml"
             - "-addr"
             - {{ .Values.config.server.addr | quote }}
+          {{- if $trustStoreEnabled }}
+          env:
+            - name: SSL_CERT_FILE
+              value: {{ printf "%s/%s" .Values.trustStore.mountPath .Values.trustStore.secretKey | quote }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8083
@@ -58,10 +64,20 @@ spec:
             - name: config
               mountPath: /config
               readOnly: true
+            {{- if $trustStoreEnabled }}
+            - name: trust-store
+              mountPath: {{ .Values.trustStore.mountPath | quote }}
+              readOnly: true
+            {{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ include "tock-mcp-server.fullname" . }}-config
+        {{- if $trustStoreEnabled }}
+        - name: trust-store
+          secret:
+            secretName: {{ .Values.trustStore.secretName }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -74,4 +90,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-
