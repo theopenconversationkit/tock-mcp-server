@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,6 +12,7 @@ import (
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"github.com/theopenconversationkit/tock-mcp-server/config"
 )
 
 // StartServer creates and starts the MCP HTTP server with the given handler.
@@ -18,7 +20,16 @@ import (
 // - POST /mcp  for JSON-RPC (stateless)
 // - GET  /mcp  for SSE stream (server-sent events)
 // - GET  /health for health checks
-func StartServer(handler http.Handler, addr string, tockBaseURL, namespace, bot, connector string) error {
+//
+// When oauthCfg.Enabled is true, the /mcp endpoint is protected by OAuth 2.1
+// Bearer token validation. The /health endpoint is never protected.
+func StartServer(handler http.Handler, addr string, tockBaseURL, namespace, bot, connector string, oauthCfg config.OAuthConfig) error {
+	// Build the OAuth middleware (no-op if disabled).
+	oauthMiddleware, err := OAuthMiddleware(oauthCfg)
+	if err != nil {
+		return fmt.Errorf("oauth middleware init: %w", err)
+	}
+
 	// Wrap the handler with a request logger before registering on the mux.
 	// Only log a static string to avoid log injection via user-controlled fields (G706).
 	logged := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -26,8 +37,11 @@ func StartServer(handler http.Handler, addr string, tockBaseURL, namespace, bot,
 		handler.ServeHTTP(w, r)
 	})
 
+	// Apply OAuth middleware on the /mcp endpoint (no-op when OAuth is disabled).
+	protected := oauthMiddleware(logged)
+
 	mux := http.NewServeMux()
-	mux.Handle("/mcp", logged)
+	mux.Handle("/mcp", protected)
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)

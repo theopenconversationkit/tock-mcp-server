@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/textproto"
 	"strings"
@@ -71,17 +72,20 @@ func (t *Client) Ask(ctx context.Context, question string, callHeaders map[strin
 
 	resp, err := t.http.Do(req)
 	if err != nil {
+		log.Printf("[tock-client] request failed: %v", err)
 		return nil, fmt.Errorf("Tock call: %w", err)
 	}
 	defer resp.Body.Close() //nolint:errcheck
 
 	raw, err := io.ReadAll(resp.Body)
 	if err != nil {
+		log.Printf("[tock-client] failed to read response body: %v", err)
 		return nil, err
 	}
 
 	// Treat any non-2xx status as a hard error and surface the body for debugging.
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		log.Printf("[tock-client] unexpected status %d from %s", resp.StatusCode, url)
 		return nil, fmt.Errorf("tock status=%d body=%s", resp.StatusCode, string(raw))
 	}
 

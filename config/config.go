@@ -25,10 +25,21 @@ type ServerConfig struct {
 	InputQuestionDescription string `mapstructure:"input_question_description"` // Description of the "question" input parameter. Falls back to a built-in default if empty.
 }
 
+// OAuthConfig holds the OAuth 2.1 Resource Server parameters.
+// When Enabled is true, the server validates incoming Bearer tokens on protected endpoints.
+type OAuthConfig struct {
+	Enabled        bool     `mapstructure:"enabled"`         // Enable OAuth 2.1 token validation.
+	Issuer         string   `mapstructure:"issuer"`          // Expected token issuer (iss claim). Also used for OIDC Discovery if JwksURL is empty.
+	JwksURL        string   `mapstructure:"jwks_url"`        // Explicit JWKS endpoint URL. If empty, derived from Issuer via OIDC Discovery.
+	Audience       string   `mapstructure:"audience"`        // Expected audience (aud claim). Leave empty to skip audience check.
+	RequiredScopes []string `mapstructure:"required_scopes"` // Scopes that must be present in the token's "scope" claim.
+}
+
 // Config is the top-level configuration structure loaded using Viper.
 type Config struct {
 	Tock   TockConfig   `mapstructure:"tock"`
 	Server ServerConfig `mapstructure:"server"`
+	OAuth  OAuthConfig  `mapstructure:"oauth"`
 }
 
 // Load reads and parses the configuration file at path using Viper.
@@ -105,4 +116,9 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("server.tool_name", "ask_tock")
 	v.SetDefault("server.tool_description", "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents.")
 	v.SetDefault("server.input_question_description", "Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available.")
+	v.SetDefault("oauth.enabled", false)
+	v.SetDefault("oauth.issuer", "")
+	v.SetDefault("oauth.jwks_url", "")
+	v.SetDefault("oauth.audience", "")
+	v.SetDefault("oauth.required_scopes", []string{})
 }

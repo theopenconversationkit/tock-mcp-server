@@ -30,3 +30,22 @@ server:
   # Leave empty to use the built-in default.
   input_question_description: "Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available."
 
+# OAuth 2.1 Resource Server configuration.
+# When enabled, the /mcp endpoint requires a valid Bearer token.
+# The /health endpoint is never protected.
+oauth:
+  # Set to true to enable OAuth 2.1 token validation on /mcp.
+  enabled: false
+  # Token issuer (iss claim). Also used for OIDC Discovery when jwks_url is empty.
+  # Example: "https://auth.example.com/realms/my-realm"
+  issuer: ""
+  # Explicit JWKS endpoint URL. If empty, derived automatically from issuer
+  # via OIDC Discovery ({issuer}/.well-known/openid-configuration).
+  # Example: "https://auth.example.com/realms/my-realm/protocol/openid-connect/certs"
+  jwks_url: ""
+  # Expected audience (aud claim). Leave empty to skip audience verification.
+  audience: ""
+  # Scopes that must be present in the token's "scope" claim.
+  # Leave empty to skip scope verification.
+  required_scopes: []
+

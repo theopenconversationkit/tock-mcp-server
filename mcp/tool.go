@@ -77,6 +77,8 @@ func RegisterTool(server *mcp.Server, tockClient *tock.Client, serverCfg config.
 
 			tockResp, err := tockClient.Ask(ctx, args.Question, args.Headers)
 			if err != nil {
+				// Log the error server-side for troubleshooting (e.g. certificate, DNS, timeout).
+				log.Printf("[ask_tock] error calling Tock: %v", err)
 				// Surface the error as an MCP tool error rather than crashing the server.
 				return &mcp.CallToolResult{
 					IsError: true,

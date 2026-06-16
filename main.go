@@ -60,6 +60,7 @@ func main() {
 		cfg.Tock.Namespace,
 		cfg.Tock.Bot,
 		cfg.Tock.Connector,
+		cfg.OAuth,
 	); err != nil {
 		log.Fatal(err)
 	}
