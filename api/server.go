@@ -1,8 +1,14 @@
 package api
 
 import (
+	"context"
+	"errors"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
@@ -14,8 +20,9 @@ import (
 // - GET  /health for health checks
 func StartServer(handler http.Handler, addr string, tockBaseURL, namespace, bot, connector string) error {
 	// Wrap the handler with a request logger before registering on the mux.
+	// Only log a static string to avoid log injection via user-controlled fields (G706).
 	logged := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[%s] %s %s", r.RemoteAddr, r.Method, r.URL.Path)
+		log.Printf("incoming request on /mcp")
 		handler.ServeHTTP(w, r)
 	})
 
@@ -28,11 +35,50 @@ func StartServer(handler http.Handler, addr string, tockBaseURL, namespace, bot,
 	})
 
 	log.Printf("tock-web MCP server listening on http://localhost%s/mcp", addr)
-	log.Printf("→ POST /mcp  JSON-RPC (stateless)")
-	log.Printf("→ GET  /mcp  SSE stream (server-sent events)")
-	log.Printf("→ Tock endpoint: %s/io/%s/%s/%s", tockBaseURL, namespace, bot, connector)
+	log.Printf("POST /mcp  JSON-RPC (stateless)")
+	log.Printf("GET  /mcp  SSE stream (server-sent events)")
+	log.Printf("Tock endpoint: %s/io/%s/%s/%s", tockBaseURL, namespace, bot, connector)
 
-	return http.ListenAndServe(addr, mux)
+	// Use http.Server with explicit timeouts instead of http.ListenAndServe (G114).
+	srv := &http.Server{
+		Addr:              addr,
+		Handler:           mux,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
+
+	// Run the server in a goroutine so we can listen for OS signals.
+	serveErr := make(chan error, 1)
+	go func() {
+		err := srv.ListenAndServe()
+		if err == nil || errors.Is(err, http.ErrServerClosed) {
+			serveErr <- nil
+			return
+		}
+		serveErr <- err
+	}()
+
+	// Block until SIGINT / SIGTERM or an unexpected server error.
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	select {
+	case err := <-serveErr:
+		return err
+	case <-ctx.Done():
+		log.Printf("shutdown signal received, stopping HTTP server")
+	}
+
+	// Give in-flight requests up to 10 s to finish.
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		return err
+	}
+
+	return <-serveErr
 }
 
 // NewStreamableHandler creates an MCP streamable HTTP handler.
