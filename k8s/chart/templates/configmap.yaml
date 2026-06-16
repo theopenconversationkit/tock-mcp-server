@@ -17,3 +17,35 @@ data:
       tool_name: {{ .Values.config.server.tool_name | quote }}
       tool_description: {{ .Values.config.server.tool_description | quote }}
       input_question_description: {{ .Values.config.server.input_question_description | quote }}
+      {{- if .Values.config.server.read_header_timeout }}
+      read_header_timeout: {{ .Values.config.server.read_header_timeout | quote }}
+      {{- end }}
+      {{- if .Values.config.server.read_timeout }}
+      read_timeout: {{ .Values.config.server.read_timeout | quote }}
+      {{- end }}
+      {{- if .Values.config.server.write_timeout }}
+      write_timeout: {{ .Values.config.server.write_timeout | quote }}
+      {{- end }}
+      {{- if .Values.config.server.idle_timeout }}
+      idle_timeout: {{ .Values.config.server.idle_timeout | quote }}
+      {{- end }}
+      {{- if .Values.config.server.shutdown_timeout }}
+      shutdown_timeout: {{ .Values.config.server.shutdown_timeout | quote }}
+      {{- end }}
+    oauth:
+      enabled: {{ .Values.config.oauth.enabled }}
+      {{- if .Values.config.oauth.issuer }}
+      issuer: {{ .Values.config.oauth.issuer | quote }}
+      {{- end }}
+      {{- if .Values.config.oauth.jwks_url }}
+      jwks_url: {{ .Values.config.oauth.jwks_url | quote }}
+      {{- end }}
+      {{- if .Values.config.oauth.audience }}
+      audience: {{ .Values.config.oauth.audience | quote }}
+      {{- end }}
+      {{- if .Values.config.oauth.required_scopes }}
+      required_scopes:
+        {{- range .Values.config.oauth.required_scopes }}
+        - {{ . | quote }}
+        {{- end }}
+      {{- end }}

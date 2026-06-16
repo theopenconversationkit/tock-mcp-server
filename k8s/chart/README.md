@@ -62,7 +62,31 @@ Injected as a `ConfigMap` mounted at `/config/config.yaml` inside the container.
 | `config.server.addr`      | HTTP listen address                                               | `:8083`                                                                                                          |
 | `config.server.tool_name` | MCP tool name for defined connector                               | `ask_tock`                                                                                                       |
 | `config.server.tool_description` | Highly detailed description guiding Agent when to use the tool... | `Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents.` |
-| `input_question_description` | Detailed guidance on what to include in the question...           | `Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available` |
+| `config.server.input_question_description` | Detailed guidance on what to include in the question...           | `Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available` |
+
+### Server timeouts
+
+All fields use the [Go duration format](https://pkg.go.dev/time#ParseDuration) (`"5s"`, `"1m"`, `"1m30s"`, …). Leave empty to use the built-in server default.
+
+| Parameter | Default | Description |
+|---|---|---|
+| `config.server.read_header_timeout` | `""` → `5s` | Maximum time to read request headers |
+| `config.server.read_timeout` | `""` → `15s` | Maximum time to read the full request body |
+| `config.server.write_timeout` | `""` → `30s` | Maximum time to write the response |
+| `config.server.idle_timeout` | `""` → `60s` | Maximum keep-alive idle time between requests |
+| `config.server.shutdown_timeout` | `""` → `10s` | Graceful shutdown deadline for in-flight requests |
+
+### OAuth 2.1
+
+When `config.oauth.enabled` is `true`, every request to `/mcp` must carry a valid Bearer token. The `/health` endpoint is never protected.
+
+| Parameter | Default | Description |
+|---|---|---|
+| `config.oauth.enabled` | `false` | Enable Bearer token validation on `/mcp` |
+| `config.oauth.issuer` | `""` | Expected `iss` claim; also used for OIDC Discovery when `jwks_url` is empty |
+| `config.oauth.jwks_url` | `""` | Explicit JWKS endpoint URL (overrides OIDC Discovery) |
+| `config.oauth.audience` | `""` | Expected `aud` claim — leave empty to skip |
+| `config.oauth.required_scopes` | `[]` | Scopes that must appear in the token's `scope` claim |
 
 ### Service
 
@@ -174,6 +198,15 @@ config:
     user_id: "mcp-prod"
   server:
     addr: ":8083"
+    # Optional: override default HTTP timeouts
+    # write_timeout: "60s"
+    # shutdown_timeout: "30s"
+  # Optional: enable OAuth 2.1 Bearer token validation
+  # oauth:
+  #   enabled: true
+  #   issuer: "https://auth.my-company.com/realms/prod"
+  #   audience: "tock-mcp-server"
+  #   required_scopes: ["read"]
 
 ingress:
   enabled: true

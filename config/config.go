@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -19,10 +20,15 @@ type TockConfig struct {
 
 // ServerConfig holds the HTTP server parameters.
 type ServerConfig struct {
-	Addr                     string `mapstructure:"addr"`                       // Listen address, e.g. ":8083".
-	ToolName                 string `mapstructure:"tool_name"`                  // Name of the MCP tool exposed to AI clients. Defaults to "ask_tock" if empty.
-	ToolDescription          string `mapstructure:"tool_description"`           // Description of the MCP tool shown to AI clients. Falls back to a built-in default if empty.
-	InputQuestionDescription string `mapstructure:"input_question_description"` // Description of the "question" input parameter. Falls back to a built-in default if empty.
+	Addr                     string        `mapstructure:"addr"`                       // Listen address, e.g. ":8083".
+	ToolName                 string        `mapstructure:"tool_name"`                  // Name of the MCP tool exposed to AI clients. Defaults to "ask_tock" if empty.
+	ToolDescription          string        `mapstructure:"tool_description"`           // Description of the MCP tool shown to AI clients. Falls back to a built-in default if empty.
+	InputQuestionDescription string        `mapstructure:"input_question_description"` // Description of the "question" input parameter. Falls back to a built-in default if empty.
+	ReadHeaderTimeout        time.Duration `mapstructure:"read_header_timeout"`        // Max time to read request headers. Default: 5s.
+	ReadTimeout              time.Duration `mapstructure:"read_timeout"`               // Max time to read the full request. Default: 15s.
+	WriteTimeout             time.Duration `mapstructure:"write_timeout"`              // Max time to write the response. Default: 30s.
+	IdleTimeout              time.Duration `mapstructure:"idle_timeout"`               // Max keep-alive idle time. Default: 60s.
+	ShutdownTimeout          time.Duration `mapstructure:"shutdown_timeout"`           // Graceful shutdown deadline. Default: 10s.
 }
 
 // OAuthConfig holds the OAuth 2.1 Resource Server parameters.
@@ -116,6 +122,11 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("server.tool_name", "ask_tock")
 	v.SetDefault("server.tool_description", "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents.")
 	v.SetDefault("server.input_question_description", "Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available.")
+	v.SetDefault("server.read_header_timeout", 5*time.Second)
+	v.SetDefault("server.read_timeout", 15*time.Second)
+	v.SetDefault("server.write_timeout", 30*time.Second)
+	v.SetDefault("server.idle_timeout", 60*time.Second)
+	v.SetDefault("server.shutdown_timeout", 10*time.Second)
 	v.SetDefault("oauth.enabled", false)
 	v.SetDefault("oauth.issuer", "")
 	v.SetDefault("oauth.jwks_url", "")

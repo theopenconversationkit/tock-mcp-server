@@ -29,6 +29,13 @@ server:
   # This guides the AI on what to include in the question.
   # Leave empty to use the built-in default.
   input_question_description: "Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available."
+  # HTTP server timeouts. Use Go duration format (e.g. "5s", "1m30s").
+  # These fields are optional — sensible defaults are applied when omitted.
+  # read_header_timeout: "5s"   # default: 5s
+  # read_timeout: "15s"         # default: 15s
+  # write_timeout: "30s"        # default: 30s
+  # idle_timeout: "60s"         # default: 60s
+  # shutdown_timeout: "10s"     # default: 10s
 
 # OAuth 2.1 Resource Server configuration.
 # When enabled, the /mcp endpoint requires a valid Bearer token.
