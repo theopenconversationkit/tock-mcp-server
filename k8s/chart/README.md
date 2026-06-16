@@ -4,7 +4,7 @@ Helm chart for the **Tock MCP Server** — a [Model Context Protocol](https://mo
 
 | Chart version | App version | Image |
 |---------------|-------------|---|
-| 0.1.2         | 0.7.1       | `ghcr.io/theopenconversationkit/tock-mcp-server` |
+| 0.1.3         | 0.7.1       | `ghcr.io/theopenconversationkit/tock-mcp-server` |
 
 ---
 
