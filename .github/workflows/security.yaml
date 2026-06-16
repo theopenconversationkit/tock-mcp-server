@@ -26,9 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: securego/gosec@master
+      - uses: actions/setup-go@v6
         with:
-          args: ./...
+          go-version-file: go.mod
+      - run: go install github.com/securego/gosec/v2/cmd/gosec@latest
+      - run: gosec ./...
+      #- uses: securego/gosec@master ## Default image is 1.26.3 ... need 1.26.4
+      #  with:
+      #    args: ./...
 
   trivy:
     runs-on: ubuntu-latest
