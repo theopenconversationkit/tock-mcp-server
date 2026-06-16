@@ -4,7 +4,7 @@ Helm chart for the **Tock MCP Server** — a [Model Context Protocol](https://mo
 
 | Chart version | App version | Image |
 |---------------|-------------|---|
-| 0.1.2         | 0.7.1       | `ghcr.io/theopenconversationkit/tock-mcp-server` |
+| 0.1.3         | 0.7.1       | `ghcr.io/theopenconversationkit/tock-mcp-server` |
 
 ---
 
@@ -103,6 +103,26 @@ ingress:
 | `podSecurityContext` | Pod-level security context | `runAsNonRoot: true`, uid/gid 65532 |
 | `securityContext` | Container-level security context | `readOnlyRootFilesystem: true`, drop ALL |
 
+### Trust store for private CA
+
+Use this when the MCP server must call a Tock URL signed by an internal CA stored in a Secret.
+
+| Parameter | Description | Default |
+|---|---|---|
+| `trustStore.enabled` | Mount the Secret and set `SSL_CERT_FILE` | `false` |
+| `trustStore.secretName` | Secret name containing the CA bundle file | `""` |
+| `trustStore.secretKey` | Secret key filename, e.g. `ca.crt` | `ca.crt` |
+| `trustStore.mountPath` | Mount directory inside the pod | `/etc/ssl/certs/custom-ca` |
+
+Example:
+
+```yaml
+trustStore:
+  enabled: true
+  secretName: tock-private-ca
+  secretKey: ca.crt
+```
+
 ---
 
 ## Examples
@@ -180,7 +200,7 @@ helm upgrade tock-mcp ./k8s/chart \
   --set image.tag=v0.6.0
 ```
 
-> **Note:** When `config.*` values change, the Deployment automatically rolls out thanks to the `checksum/config` annotation.
+> **Note:** When `config.*` values change, the Deployment automatically rolls out thanks to the `checksum/config` annotation. If you update the CA Secret content, restart the pod to reload the trust store.
 
 ## Uninstall
 
@@ -204,4 +224,3 @@ k8s/chart/
     ├── service.yaml      # ClusterIP service
     └── NOTES.txt
 ```
-
