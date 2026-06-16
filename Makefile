@@ -1,4 +1,4 @@
-.PHONY: help all build build-servers run run-local docker run-docker tests clean lintchart
+.PHONY: help all build build-servers run run-local docker run-docker tests clean lintchart security install-security-tools govulncheck gosec
 
 BIN_DIR=bin
 
@@ -59,3 +59,21 @@ lint-chart: ## Lint the chart
 
 chart-version: ## Display chart version
 	@echo "$(BLUE)Chart Application Version:$(appversion)  Chart Version:${chartversion}$(NC)"
+
+security: govulncheck gosec
+
+install-security-tools: ## Install security tools
+	@echo "$(GREEN)Installing security tools ...$(NC)"
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	go install github.com/securego/gosec/v2/cmd/gosec@latest
+	@echo "$(GREEN)✓ Security tools installed$(NC)"
+
+govulncheck: ## Run govulncheck security checks
+	@echo "$(GREEN)Running govulncheck ...$(NC)"
+	govulncheck ./...
+	@echo "$(GREEN)✓ govulncheck completed$(NC)"
+
+gosec: ## Run gosec security checks
+	@echo "$(GREEN)Running gosec ...$(NC)"
+	gosec ./...
+	@echo "$(GREEN)✓ gosec completed$(NC)"
