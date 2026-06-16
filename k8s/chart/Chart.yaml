@@ -2,8 +2,8 @@ apiVersion: v2
 name: tock-mcp-server
 description: Helm chart for the Tock MCP Server (web-connector bridge)
 type: application
-version: 0.1.3
-appVersion: "0.7.1"
+version: 0.7.3
+appVersion: "0.8.0"
 keywords:
   - tock
   - mcp
