@@ -15,6 +15,7 @@ tock:
   extra_headers:
     X-Toki-Origin: ""   # always sent; can be overridden by the caller
     X-Toki-Filter: ""                 # no default — provided by the caller if needed
+  timeout: "25s"
 
 server:
   # HTTP listen address of the MCP server

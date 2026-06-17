@@ -75,11 +75,18 @@ func RegisterTool(server *mcp.Server, tockClient *tock.Client, serverCfg config.
 
 			log.Printf("[ask_tock] question: %q headers: %v", args.Question, args.Headers)
 
+			// Créer un contexte avec un timeout explicite pour l'appel Tock,
+			// car le WriteTimeout du serveur HTTP ne cancel pas le ctx du handler.
+			//tockCtx, cancel := context.WithTimeout(ctx, serverCfg.WriteTimeout)
+			//defer cancel()
+
 			tockResp, err := tockClient.Ask(ctx, args.Question, args.Headers)
 			if err != nil {
-				// Log the error server-side for troubleshooting (e.g. certificate, DNS, timeout).
-				log.Printf("[ask_tock] error calling Tock: %v", err)
-				// Surface the error as an MCP tool error rather than crashing the server.
+				if ctx.Err() == context.DeadlineExceeded || ctx.Err() == context.Canceled {
+					log.Printf("[ask_tock] timeout: Tock API did not respond within %s", serverCfg.WriteTimeout)
+				} else {
+					log.Printf("[ask_tock] error calling Tock: %v", err)
+				}
 				return &mcp.CallToolResult{
 					IsError: true,
 					Content: []mcp.Content{

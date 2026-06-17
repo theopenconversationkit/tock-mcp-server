@@ -16,6 +16,7 @@ type TockConfig struct {
 	Connector    string            `mapstructure:"connector"`     // Web-connector identifier exposed by the bot.
 	UserID       string            `mapstructure:"user_id"`       // User ID sent to Tock with every request.
 	ExtraHeaders map[string]string `mapstructure:"extra_headers"` // Optional HTTP headers forwarded to Tock (name → default value; empty string means no default).
+	Timeout      time.Duration     `mapstructure:"timeout"`       // Max time to wait for a Tock API response. Default: 25s.
 }
 
 // ServerConfig holds the HTTP server parameters.
@@ -132,4 +133,5 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("oauth.jwks_url", "")
 	v.SetDefault("oauth.audience", "")
 	v.SetDefault("oauth.required_scopes", []string{})
+	v.SetDefault("tock.timeout", 25*time.Second)
 }
