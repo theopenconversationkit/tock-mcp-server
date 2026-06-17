@@ -12,6 +12,9 @@ data:
       bot: {{ .Values.config.tock.bot | quote }}
       connector: {{ .Values.config.tock.connector | quote }}
       user_id: {{ .Values.config.tock.user_id | quote }}
+      {{- if .Values.config.tock.timeout }}
+      timeout: {{ .Values.config.tock.timeout | quote }}
+      {{- end }}
     server:
       addr: {{ .Values.config.server.addr | quote }}
       tool_name: {{ .Values.config.server.tool_name | quote }}

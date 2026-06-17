@@ -85,6 +85,11 @@ config:
     bot: "howtonet"
     connector: "howtonetweb"
     user_id: "mcp-user-001"
+    # Max time to wait for a Tock API response (Go duration format: "5s", "1m30s", …).
+    # Must be lower than server.write_timeout to allow the MCP server
+    # to return a proper error response before the connection is cut.
+    # Leave empty to use default: 25s.
+    timeout: ""
   server:
     addr: ":8083"
     tool_name: "ask_tock"

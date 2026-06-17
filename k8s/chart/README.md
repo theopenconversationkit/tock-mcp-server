@@ -4,7 +4,7 @@ Helm chart for the **Tock MCP Server** — a [Model Context Protocol](https://mo
 
 | Chart version | App version | Image |
 |---------------|-------------|---|
-| 0.1.3         | 0.7.1       | `ghcr.io/theopenconversationkit/tock-mcp-server` |
+| 0.7.3         | 0.8.0       | `ghcr.io/theopenconversationkit/tock-mcp-server` |
 
 ---
 
@@ -59,6 +59,7 @@ Injected as a `ConfigMap` mounted at `/config/config.yaml` inside the container.
 | `config.tock.bot`         | Bot name                                                          | `howtonet`                                                                                                       |
 | `config.tock.connector`   | Web-connector identifier                                          | `howtonetweb`                                                                                                    |
 | `config.tock.user_id`     | User ID sent to Tock                                              | `mcp-user-001`                                                                                                   |
+| `config.tock.timeout`     | Max time to wait for a Tock API response. Must be lower than `write_timeout`. Go duration format. | `""` → `25s`                                                                                |
 | `config.server.addr`      | HTTP listen address                                               | `:8083`                                                                                                          |
 | `config.server.tool_name` | MCP tool name for defined connector                               | `ask_tock`                                                                                                       |
 | `config.server.tool_description` | Highly detailed description guiding Agent when to use the tool... | `Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents.` |
