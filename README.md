@@ -76,9 +76,66 @@ server:
   # Description of the "question" parameter expected by the tool.
   # This text guides the AI on what information to include in the question for better answers.
   input_question_description: "Question about Tock. Include context, error messages, version, environment or goal if available."
+  # HTTP server timeouts (Go duration format: "5s", "1m30s", …).
+  # All fields are optional — the values below are the defaults.
+  # read_header_timeout: "5s"
+  # read_timeout: "15s"
+  # write_timeout: "30s"
+  # idle_timeout: "60s"
+  # shutdown_timeout: "10s"
+
+# OAuth 2.1 Resource Server (optional).
+# When enabled, every request to /mcp must carry a valid Bearer token.
+# The /health endpoint is never protected.
+oauth:
+  enabled: false
+  # Token issuer (iss claim). Also used for OIDC Discovery when jwks_url is empty.
+  # Example: "https://auth.example.com/realms/my-realm"
+  issuer: ""
+  # Explicit JWKS endpoint URL.
+  # If empty, the server derives it automatically via OIDC Discovery ({issuer}/.well-known/openid-configuration).
+  # Example: "https://auth.example.com/realms/my-realm/protocol/openid-connect/certs"
+  jwks_url: ""
+  # Expected audience (aud claim). Leave empty to skip audience verification.
+  audience: ""
+  # Scopes that must be present in the token's "scope" claim.
+  # Leave empty to skip scope verification.
+  required_scopes: []
 ```
 
 > **Tip:** Customise `tool_name` and `tool_description` to match the domain of your Tock bot so that AI assistants can better decide when to invoke the tool.
+
+### Server timeouts reference
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `server.read_header_timeout` | `5s` | Maximum time to read request headers |
+| `server.read_timeout` | `15s` | Maximum time to read the full request body |
+| `server.write_timeout` | `30s` | Maximum time to write the response |
+| `server.idle_timeout` | `60s` | Maximum keep-alive idle time between requests |
+| `server.shutdown_timeout` | `10s` | Graceful shutdown deadline for in-flight requests |
+
+All timeouts accept the [Go duration format](https://pkg.go.dev/time#ParseDuration): `"5s"`, `"1m"`, `"1m30s"`, etc.
+
+### OAuth 2.1 reference
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `oauth.enabled` | `false` | Enable Bearer token validation on `/mcp` |
+| `oauth.issuer` | `""` | Expected `iss` claim; used for OIDC Discovery when `jwks_url` is empty |
+| `oauth.jwks_url` | `""` | Explicit JWKS endpoint URL (overrides OIDC Discovery) |
+| `oauth.audience` | `""` | Expected `aud` claim — leave empty to skip |
+| `oauth.required_scopes` | `[]` | Scopes that must appear in the token's `scope` claim |
+
+Environment variable equivalents (override any file value):
+
+```bash
+TOCK_MCP_OAUTH_ENABLED=true
+TOCK_MCP_OAUTH_ISSUER=https://auth.example.com/realms/my-realm
+TOCK_MCP_OAUTH_JWKS_URL=https://auth.example.com/realms/my-realm/protocol/openid-connect/certs
+TOCK_MCP_OAUTH_AUDIENCE=tock-mcp-server
+TOCK_MCP_OAUTH_REQUIRED_SCOPES=read,write
+```
 
 ## Docker image (scratch)
 
@@ -105,6 +162,19 @@ server:
   tool_name: "ask_tock"
   tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
   input_question_description: "Question about Tock. Include context, error messages, version, environment or goal if available."
+  # HTTP timeouts are optional — uncomment to override defaults
+  # read_header_timeout: "5s"
+  # read_timeout: "15s"
+  # write_timeout: "30s"
+  # idle_timeout: "60s"
+  # shutdown_timeout: "10s"
+
+# OAuth 2.1 — optional, disabled by default
+# oauth:
+#   enabled: true
+#   issuer: "https://auth.example.com/realms/my-realm"
+#   audience: "tock-mcp-server"
+#   required_scopes: []
 ```
 
 ```bash
@@ -158,6 +228,15 @@ data:
       tool_name: "ask_tock"
       tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
       input_question_description: "Question about Tock. Include context, error messages, version, environment or goal if available."
+      # read_header_timeout: "5s"
+      # read_timeout: "15s"
+      # write_timeout: "30s"
+      # idle_timeout: "60s"
+      # shutdown_timeout: "10s"
+    # oauth:
+    #   enabled: true
+    #   issuer: "https://auth.example.com/realms/my-realm"
+    #   audience: "tock-mcp-server"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -216,6 +295,15 @@ config:
     tool_name: "ask_tock"
     tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
     input_question_description: "Question about Tock. Include context, error messages, version, environment or goal if available."
+    # read_header_timeout: "5s"
+    # read_timeout: "15s"
+    # write_timeout: "30s"
+    # idle_timeout: "60s"
+    # shutdown_timeout: "10s"
+  # oauth:
+  #   enabled: true
+  #   issuer: "https://auth.example.com/realms/my-realm"
+  #   audience: "tock-mcp-server"
 
 ingress:
   enabled: true

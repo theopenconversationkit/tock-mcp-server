@@ -55,11 +55,12 @@ func main() {
 	// Start the HTTP server.
 	if err := api.StartServer(
 		handler,
-		cfg.Server.Addr,
+		cfg.Server,
 		cfg.Tock.BaseURL,
 		cfg.Tock.Namespace,
 		cfg.Tock.Bot,
 		cfg.Tock.Connector,
+		cfg.OAuth,
 	); err != nil {
 		log.Fatal(err)
 	}

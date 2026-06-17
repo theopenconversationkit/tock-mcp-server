@@ -90,6 +90,30 @@ config:
     tool_name: "ask_tock"
     tool_description: "Ask a question to the Tock documentary chatbot (RAG). Returns the text response and links to source documents."
     input_question_description: "Question to ask the Tock chatbot (RAG). Include context, error messages, version, environment, or desired objective if available."
+    # HTTP server timeouts (Go duration format: "5s", "1m30s", …).
+    # Leave empty to use server defaults: 5s / 15s / 30s / 60s / 10s.
+    read_header_timeout: ""
+    read_timeout: ""
+    write_timeout: ""
+    idle_timeout: ""
+    shutdown_timeout: ""
+
+  # OAuth 2.1 Resource Server — disabled by default.
+  # When enabled, every request to /mcp must carry a valid Bearer token.
+  # The /health endpoint is never protected.
+  oauth:
+    enabled: false
+    # Token issuer (iss claim). Used for OIDC Discovery when jwks_url is empty.
+    # Example: "https://auth.example.com/realms/my-realm"
+    issuer: ""
+    # Explicit JWKS endpoint URL. Leave empty to derive from issuer via OIDC Discovery.
+    # Example: "https://auth.example.com/realms/my-realm/protocol/openid-connect/certs"
+    jwks_url: ""
+    # Expected audience (aud claim). Leave empty to skip audience verification.
+    audience: ""
+    # Scopes that must appear in the token's "scope" claim.
+    # Leave empty to skip scope verification. Example: ["read", "write"]
+    required_scopes: []
 
 trustStore:
   enabled: false
